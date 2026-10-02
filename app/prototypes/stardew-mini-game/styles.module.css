@@ -1,0 +1,209 @@
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #fce4ec;
+  font-family: "Courier New", Courier, monospace, sans-serif;
+  user-select: none;
+}
+
+.canvasContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.canvasContainer canvas {
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* Stardew Valley Retro Pixel HUD (Top Right) */
+.stardewHud {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  background: #ffebc6;
+  border: 4px solid #5c3818;
+  outline: 3px solid #b87333;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4), inset 3px 3px 0 #fff8e7, inset -3px -3px 0 #d79a5b;
+  border-radius: 4px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 220px;
+}
+
+.hudHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 900;
+  color: #4a2c11;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  border-bottom: 2px dashed #b87333;
+  padding-bottom: 6px;
+}
+
+.goldBadge {
+  background: #ffe082;
+  color: #5d4037;
+  border: 2px solid #ffb300;
+  box-shadow: inset 2px 2px 0 #fff59d, inset -2px -2px 0 #ffa000;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-weight: 900;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.staminaContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.staminaLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: #5d4037;
+}
+
+.staminaBarBg {
+  width: 100%;
+  height: 16px;
+  background: #8d5524;
+  border: 3px solid #4a2c11;
+  box-shadow: inset 2px 2px 0 #3e2723;
+  border-radius: 0;
+  overflow: hidden;
+  padding: 2px;
+}
+
+.staminaBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #76ff03, #64dd17);
+  box-shadow: inset 0 2px 0 #ccff90;
+  transition: width 0.3s steps(10);
+}
+
+/* Stardew Valley Inventory Hotbar (Bottom Center) */
+.hotbarContainer {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: #ffebc6;
+  border: 4px solid #5c3818;
+  outline: 3px solid #b87333;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4), inset 3px 3px 0 #fff8e7, inset -3px -3px 0 #d79a5b;
+  border-radius: 4px;
+  padding: 6px 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.hotbarSlot {
+  width: 52px;
+  height: 52px;
+  background: #e0a96d;
+  border: 3px solid #5c3818;
+  box-shadow: inset 3px 3px 0 #8d5524, inset -3px -3px 0 #f4c48c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.1s step-end;
+}
+
+.hotbarSlot:hover {
+  background: #f4c48c;
+  transform: translateY(-2px);
+}
+
+.hotbarSlotActive {
+  background: #ffe082;
+  border: 3px solid #e65100;
+  box-shadow: inset 3px 3px 0 #fff59d, inset -3px -3px 0 #ff8f00, 0 0 0 2px #ffe082;
+  transform: translateY(-4px);
+}
+
+.slotIcon {
+  font-size: 1.5rem;
+  line-height: 1;
+  filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.3));
+}
+
+.slotNumber {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: #3e2723;
+}
+
+.slotCount {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #3e2723;
+  text-shadow: 1px 1px 0 #ffffff;
+}
+
+.homeLink {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  background: #ffebc6;
+  color: #5c3818;
+  text-decoration: none;
+  padding: 6px 14px;
+  border: 3px solid #5c3818;
+  outline: 2px solid #b87333;
+  font-size: 0.8rem;
+  font-weight: 900;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.1s step-end;
+}
+
+.homeLink:hover {
+  background: #5c3818;
+  color: #ffebc6;
+}
+
+.sleepingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 10, 30, 0.65);
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffebc6;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-shadow: 3px 3px 0 #000000;
+}

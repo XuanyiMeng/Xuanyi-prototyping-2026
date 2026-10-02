@@ -1,0 +1,642 @@
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Silkscreen&family=Space+Grotesk:wght@300..700&family=Syne:wght@400..800&family=VT323&display=swap');
+
+.prototypeWrapper {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg-stripes, var(--bg-color, #0b0f17));
+  color: var(--text-color, #f8fafc);
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* Theme color definitions */
+.themeFoamDenim {
+  --bg-color: #0b0f17;
+  --bg-stripes: repeating-linear-gradient(
+    45deg,
+    #0c101a 0px,
+    #0c101a 12px,
+    #121826 12px,
+    #121826 24px
+  );
+  --text-color: #ffffff;
+  --accent-primary: #ffffff;
+  --accent-secondary: #cbd5e1;
+  --accent-tertiary: #94a3b8;
+  --card-bg: rgba(15, 20, 30, 0.92);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --poster-overlay: none;
+}
+
+.themeSkyFoam {
+  --bg-color: #bde5f8;
+  --bg-stripes: repeating-linear-gradient(90deg, #bde5f8 0px, #bde5f8 75px, #ffffff 75px, #ffffff 150px);
+  --text-color: #0c0b10;
+  --accent-primary: #000000;
+  --accent-secondary: #0284c7;
+  --accent-tertiary: #38bdf8;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(255, 255, 255, 0.9);
+  --poster-overlay: none;
+}
+
+.theme3DChrome {
+  --bg-color: #0f172a;
+  --bg-stripes: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+  --text-color: #ffffff;
+  --accent-primary: #e2e8f0;
+  --accent-secondary: #38bdf8;
+  --accent-tertiary: #94a3b8;
+  --card-bg: rgba(30, 41, 59, 0.85);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --poster-overlay: none;
+}
+
+.themeVelvet {
+  --bg-color: #0d0b11;
+  --bg-stripes: #0d0b11;
+  --text-color: #f7f1e9;
+  --accent-primary: #e63956;
+  --accent-secondary: #d4af37;
+  --accent-tertiary: #b185db;
+  --card-bg: rgba(26, 22, 34, 0.85);
+  --card-border: rgba(247, 241, 233, 0.12);
+  --poster-overlay: radial-gradient(circle at 50% 30%, rgba(230, 57, 86, 0.08) 0%, transparent 70%);
+}
+
+.themeNoir {
+  --bg-color: #050505;
+  --bg-stripes: #050505;
+  --text-color: #ffffff;
+  --accent-primary: #ffffff;
+  --accent-secondary: #888888;
+  --accent-tertiary: #555555;
+  --card-bg: rgba(20, 20, 20, 0.9);
+  --card-border: rgba(255, 255, 255, 0.2);
+  --poster-overlay: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+}
+
+/* Header Navbar */
+.topNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  z-index: 50;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.backLink {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.backLink:hover {
+  opacity: 1;
+  transform: translateX(-3px);
+}
+
+.brandTitle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brandBadge {
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: #ffffff;
+  color: #0b0f17;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+  font-weight: 800;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.iconBtn {
+  background: transparent;
+  border: 2px solid var(--card-border);
+  color: var(--text-color);
+  padding: 0.5rem 0.9rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.iconBtn:hover {
+  background: #ffffff;
+  color: #0b0f17;
+}
+
+.iconBtnActive {
+  background: #ffffff;
+  color: #0b0f17;
+}
+
+/* Control Panel Section */
+.controlPanel {
+  padding: 1.5rem 2rem;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--card-border);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  z-index: 40;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.controlPanelHidden {
+  display: none;
+}
+
+.mainInputRow {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.inputWrapper {
+  flex: 1;
+  min-width: 280px;
+  position: relative;
+}
+
+.sentenceInput {
+  width: 100%;
+  background: rgba(10, 14, 23, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sentenceInput:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25);
+}
+
+.randomizeBtn {
+  background: #ffffff;
+  color: #0b0f17;
+  border: none;
+  padding: 0.9rem 1.4rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.randomizeBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+}
+
+.randomizeBtn:active {
+  transform: translateY(0);
+}
+
+/* Secondary controls (Presets & Sliders) */
+.controlsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.groupLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+  font-weight: 800;
+}
+
+.presetPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.presetBtn {
+  background: transparent;
+  border: 1.5px solid var(--card-border);
+  color: var(--text-color);
+  padding: 0.4rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.presetBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.presetBtnActive {
+  background: #ffffff;
+  color: #0b0f17;
+  border-color: #ffffff;
+  font-weight: 800;
+}
+
+/* Custom Carved Text / Hollow Surface Color Picker */
+.colorPickerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.colorSwatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.colorSwatch:hover {
+  transform: scale(1.15);
+}
+
+.colorSwatchActive {
+  border-color: #ffffff;
+  transform: scale(1.2);
+}
+
+.customColorPickerInput {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sliderInput {
+  flex: 1;
+  accent-color: #ffffff;
+  cursor: pointer;
+}
+
+.sliderValue {
+  font-size: 0.8rem;
+  width: 2.5rem;
+  text-align: right;
+  font-weight: 700;
+}
+
+/* Foam Eraser & Candle Birthday Party Bar */
+.foamControlBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.foamHint {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.candleHotkeyBadge {
+  background: #f59e0b;
+  color: #000000;
+  font-size: 0.7rem;
+  font-weight: 900;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
+.candleQuickBtns {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.candleQuickBtn {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid #f59e0b;
+  color: #fde047;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.candleQuickBtn:hover {
+  background: #f59e0b;
+  color: #000000;
+}
+
+.resetFoamBtn {
+  background: #ffffff;
+  border: none;
+  color: #0b0f17;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.resetFoamBtn:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+/* Preset quick phrase chips */
+.phraseChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chip {
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Main Graphical Poster Stage */
+.posterStage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    45deg,
+    #0c1018 0px,
+    #0c1018 10px,
+    #131a28 10px,
+    #131a28 20px
+  );
+}
+
+/* Dark Navy Denim Fabric Surface Container */
+.posterFrame {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 580px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4.5rem 3rem;
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  border-radius: 60px 85px 65px 90px / 90px 65px 85px 60px;
+  box-shadow: 
+    0 35px 90px rgba(0, 0, 0, 0.85),
+    inset 0 0 60px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  user-select: none;
+  transition: background 0.4s ease;
+}
+
+/* Real-Time Interactive 3D Foam Canvas Layer overlaying the denim surface */
+.foamCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* Spawns Lit Birthday Candle Components */
+.candleLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 35;
+}
+
+.candleWrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -100%);
+  animation: candlePop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes candlePop {
+  0% {
+    transform: translate(-50%, -80%) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -100%) scale(1);
+    opacity: 1;
+  }
+}
+
+.candleFlame {
+  width: 16px;
+  height: 24px;
+  background: radial-gradient(ellipse at 50% 80%, #ffffff 0%, #fef08a 35%, #f97316 70%, rgba(239, 68, 68, 0) 100%);
+  border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
+  box-shadow: 
+    0 0 12px #fde047,
+    0 0 24px #f97316,
+    0 -6px 12px rgba(253, 224, 71, 0.8);
+  animation: flameFlicker 0.15s ease-in-out infinite alternate;
+  margin-bottom: 2px;
+}
+
+@keyframes flameFlicker {
+  0% {
+    transform: scale(1) rotate(-2deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(1.15) rotate(3deg);
+    opacity: 1;
+  }
+}
+
+.candleWick {
+  width: 2px;
+  height: 6px;
+  background: #1e293b;
+}
+
+.candleBody {
+  width: 14px;
+  height: 48px;
+  border-radius: 3px 3px 2px 2px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--wax-color1, #ff71ce) 0px,
+    var(--wax-color1, #ff71ce) 6px,
+    var(--wax-color2, #ffffff) 6px,
+    var(--wax-color2, #ffffff) 12px
+  );
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Header & Footer Metadata on Stage */
+.posterHeaderMeta {
+  position: absolute;
+  top: 1.8rem;
+  left: 3.5rem;
+  right: 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 0.75rem;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.posterFooterMeta {
+  position: absolute;
+  bottom: 1.8rem;
+  left: 3.5rem;
+  right: 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.7);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.15);
+  padding-top: 0.75rem;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.editorialNumber {
+  font-family: 'Bodoni Moda', serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #ffffff;
+}
+
+/* Responsive Rules */
+@media (max-width: 768px) {
+  .topNav {
+    padding: 1rem 1.25rem;
+  }
+
+  .controlPanel {
+    padding: 1rem 1.25rem;
+  }
+
+  .posterStage {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .posterFrame {
+    min-height: 480px;
+    padding: 3.5rem 1rem;
+    border-radius: 40px;
+  }
+}

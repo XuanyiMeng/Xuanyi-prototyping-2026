@@ -1,6 +1,5 @@
-import { Instrument_Sans } from 'next/font/google';
-
-export const instrumentSans = Instrument_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-}); 
+// Use the operating system's sans-serif font stack so the prototypes work
+// offline as well as online. `next/font/google` downloads fonts at build time.
+export const instrumentSans = {
+  className: "",
+};

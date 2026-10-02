@@ -1,0 +1,185 @@
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #fde8f0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  user-select: none;
+}
+
+.canvasContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.overlayHeader {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 16px 24px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(235, 115, 155, 0.15);
+  border: 2px solid rgba(255, 180, 205, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 380px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #d6336c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #725b67;
+  line-height: 1.4;
+}
+
+.controlHints {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #a65074;
+}
+
+.keyBadge {
+  background: #ffe3ec;
+  color: #c2255c;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-family: monospace;
+  border: 1px solid #fcc2d7;
+}
+
+.actionPanel {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.smashButton {
+  background: linear-gradient(135deg, #ff4d6d, #c9184a);
+  color: #ffffff;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(201, 24, 74, 0.4), 0 0 0 4px rgba(255, 255, 255, 0.8);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: pulseButton 2s infinite ease-in-out;
+}
+
+.smashButton:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 14px 30px rgba(201, 24, 74, 0.5), 0 0 0 4px rgba(255, 255, 255, 0.9);
+}
+
+.smashButton:active {
+  transform: scale(0.96);
+}
+
+.resetButton {
+  background: rgba(255, 255, 255, 0.9);
+  color: #a65074;
+  border: 2px solid #fcc2d7;
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.resetButton:hover {
+  background: #fff0f6;
+  color: #d6336c;
+  transform: translateY(-2px);
+}
+
+.proximityBadge {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffdeeb;
+  color: #c2255c;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(194, 37, 92, 0.2);
+  border: 1px solid #fcc2d7;
+  animation: bounceBadge 1s infinite alternate ease-in-out;
+}
+
+.homeLink {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  color: #d6336c;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 1.5px solid #fcc2d7;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.homeLink:hover {
+  background: #d6336c;
+  color: #ffffff;
+}
+
+@keyframes pulseButton {
+  0%, 100% {
+    box-shadow: 0 10px 25px rgba(201, 24, 74, 0.4), 0 0 0 4px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 12px 32px rgba(201, 24, 74, 0.6), 0 0 0 7px rgba(255, 255, 255, 0.9);
+  }
+}
+
+@keyframes bounceBadge {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-6px);
+  }
+}
