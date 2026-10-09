@@ -73,3 +73,14 @@ from the weather location's country code (for example, sakura for Japan, maple
 leaves for Canada, and tulips for the Netherlands). Unmapped countries use a leaf.
 Weather descriptions remain visible below the motif, alongside both temperature
 units, so the local decoration does not replace forecast information.
+
+## Interactive weather map
+
+Click or tap any location to query its current weather and forecast. The marker
+and summary update after a successful request; city search and geolocation also
+recenter the map. For keyboard use, focus the map, pan with arrow keys and zoom
+with +/−, then use Check map center. Queries are paused while weather is loading.
+Locations without a city/country (such as the ocean) display coordinates and the
+neutral leaf motif. Leaflet loads in the browser and uses attributed OpenStreetMap
+standard tiles; no extra map API key is required. Tiles need internet access and
+follow https://operations.osmfoundation.org/policies/tiles/ (no offline prefetch).

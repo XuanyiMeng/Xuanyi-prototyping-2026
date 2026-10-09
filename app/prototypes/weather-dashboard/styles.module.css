@@ -660,3 +660,22 @@
 }
 .footer a { color: #596579; text-decoration: none; }
 .footer a:hover { color: #596579; text-decoration: underline; }
+
+.mapSection {
+  width: calc(100% - 3rem);
+  max-width: 752px;
+  margin: 0.5rem auto 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(91, 105, 128, 0.16);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.6);
+}
+.mapTitle { font-size: 1.1rem; font-weight: 700; }
+.mapHint { font-size: 0.8rem; color: #596579; margin: 0.4rem 0 0.85rem; }
+.mapCanvas { height: 320px; width: 100%; border-radius: 16px; z-index: 0; background: #dfebe8; }
+.mapBottom { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.85rem; }
+.mapStatus { flex: 1; min-width: 160px; font-size: 0.85rem; color: #465369; }
+@media (max-width: 600px) {
+  .mapCanvas { height: 260px; }
+  .mapSection { width: calc(100% - 2rem); }
+}

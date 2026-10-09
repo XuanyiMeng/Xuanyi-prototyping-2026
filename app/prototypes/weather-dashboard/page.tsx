@@ -15,9 +15,10 @@
  * - API key entered in the UI and stored in sessionStorage (no .env needed)
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import styles from "./styles.module.css";
+import WeatherMap from "./WeatherMap";
 import SeasonalBuddy from "./SeasonalBuddy";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -243,6 +244,9 @@ export default function WeatherDashboard() {
   const [cityInput, setCityInput] = useState("");
   const [locating, setLocating] = useState(false);
 
+  const [mapPoint, setMapPoint] = useState<{ lat: number; lon: number } | null>(null);
+  const requestBusy = useRef(false);
+
   // Weather data
   const [current, setCurrent] = useState<CurrentWeather | null>(null);
   const [forecast, setForecast] = useState<ForecastDay[]>([]);
@@ -271,6 +275,8 @@ export default function WeatherDashboard() {
   // ── Fetch weather by coordinates
   const fetchByCoords = useCallback(
     async (lat: number, lon: number, key: string) => {
+      if (requestBusy.current) return;
+      requestBusy.current = true;
       setLoading(true);
       setError(null);
       try {
@@ -297,8 +303,8 @@ export default function WeatherDashboard() {
 
         // Parse current conditions
         setCurrent({
-          city: curData.name,
-          country: curData.sys.country,
+          city: curData.name || `${lat.toFixed(2)}°, ${lon.toFixed(2)}°`,
+          country: curData.sys.country ?? "",
           temp: curData.main.temp,
           feelsLike: curData.main.feels_like,
           humidity: curData.main.humidity,
@@ -343,9 +349,11 @@ export default function WeatherDashboard() {
           });
         }
         setForecast(days);
+        setMapPoint({ lat, lon });
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
+        requestBusy.current = false;
         setLoading(false);
       }
     },
@@ -501,6 +509,7 @@ export default function WeatherDashboard() {
                 sessionStorage.removeItem("owm_api_key");
                 setApiKey("");
                 setCurrent(null);
+                setMapPoint(null);
                 setForecast([]);
                 setShowKeyPanel(true);
               }}
@@ -541,6 +550,21 @@ export default function WeatherDashboard() {
         </form>
 
       </div>
+
+      <WeatherMap
+        point={mapPoint}
+        busy={loading || locating}
+        summary={current ? `${current.city} · ${formatTempBoth(current.temp).c} / ${formatTempBoth(current.temp).f} · ${current.description}` : ""}
+        onSelect={(lat, lon) => {
+          if (loading || locating || requestBusy.current) return;
+          if (!apiKey) {
+            setShowKeyPanel(true);
+            setError("Please enter your OpenWeatherMap API key first.");
+            return;
+          }
+          fetchByCoords(lat, lon, apiKey);
+        }}
+      />
 
       {/* ── Error Banner ── */}
       {error && (
