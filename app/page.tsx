@@ -11,6 +11,13 @@ interface PrototypeInfo {
 
 const prototypes: PrototypeInfo[] = [
   {
+    slug: "weather-dashboard",
+    title: "Weather Near Me 🌤️",
+    description: "Real-time weather dashboard for your current location using the OpenWeatherMap API. Shows current conditions, feels-like temp, humidity, wind speed, and a 5-day forecast with a dynamic sky theme.",
+    date: "2026-10-09",
+    tag: "API Integration · Weather",
+  },
+  {
     slug: "stardew-mini-game",
     title: "星露谷风粉色小屋 🌾🌸",
     description: "《星露谷物语》/《模拟人生》风格 2D 小游戏！WASD 或点击移动小人，点击书桌锤爆作业，点击大床睡觉恢复体力，附带金币数、体力条与底部物品栏！",
