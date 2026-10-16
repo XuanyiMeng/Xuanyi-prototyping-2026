@@ -90,29 +90,50 @@ const conditionEmoji = (condition: string, isNight: boolean): string => {
   }
 };
 
-// Country codes come from the searched location, rather than the browser language.
-// These are decorative design motifs; weather remains available as text.
-const LOCAL_MOTIFS: Record<string, { icon: string; label: string }> = {
-  JP: { icon: "🌸", label: "Sakura" },
-  CN: { icon: "🏮", label: "Lantern" },
-  CA: { icon: "🍁", label: "Maple leaf" },
-  NL: { icon: "🌷", label: "Tulip" },
-  FR: { icon: "⚜️", label: "Fleur-de-lis" },
-  AU: { icon: "🐨", label: "Koala" },
-  NZ: { icon: "🥝", label: "Kiwi fruit" },
-  GB: { icon: "🌹", label: "Rose" },
-  US: { icon: "🗽", label: "Statue of Liberty" },
-  IT: { icon: "🍋", label: "Lemon" },
-  KR: { icon: "🌺", label: "Hibiscus" },
-  CH: { icon: "🏔️", label: "Alpine mountains" },
-  BR: { icon: "🦜", label: "Parrot" },
-  IN: { icon: "🪷", label: "Lotus" },
-  TH: { icon: "🐘", label: "Elephant" },
-  MX: { icon: "🌵", label: "Cactus" },
+// The weather API supplies the place name and country code. Keep five distinct
+// motifs for each supported location so the forecast cards don't repeat one icon.
+// These are decorative; the weather description remains readable below each one.
+type LocationMotif = { icon: string; label: string };
+type MotifSet = [LocationMotif, LocationMotif, LocationMotif, LocationMotif, LocationMotif];
+
+const COUNTRY_MOTIFS: Record<string, MotifSet> = {
+  JP: [{ icon: "🌸", label: "Sakura" }, { icon: "⛩️", label: "Torii gate" }, { icon: "🍣", label: "Sushi" }, { icon: "🍵", label: "Tea" }, { icon: "🚅", label: "Bullet train" }],
+  CN: [{ icon: "🏮", label: "Lantern" }, { icon: "🐼", label: "Panda" }, { icon: "🥟", label: "Dumplings" }, { icon: "🏯", label: "Historic architecture" }, { icon: "🍵", label: "Tea" }],
+  CA: [{ icon: "🍁", label: "Maple leaf" }, { icon: "🦫", label: "Beaver" }, { icon: "🏒", label: "Hockey" }, { icon: "🏔️", label: "Mountains" }, { icon: "🫐", label: "Blueberries" }],
+  NL: [{ icon: "🌷", label: "Tulip" }, { icon: "🚲", label: "Bicycle" }, { icon: "🧀", label: "Cheese" }, { icon: "🌬️", label: "Wind" }, { icon: "🛶", label: "Canal" }],
+  FR: [{ icon: "⚜️", label: "Fleur-de-lis" }, { icon: "🥐", label: "Croissant" }, { icon: "🧀", label: "Cheese" }, { icon: "🎨", label: "Art" }, { icon: "🍇", label: "Vineyards" }],
+  AU: [{ icon: "🐨", label: "Koala" }, { icon: "🦘", label: "Kangaroo" }, { icon: "🏄", label: "Surfing" }, { icon: "🪸", label: "Coral reef" }, { icon: "⛵", label: "Sailing" }],
+  NZ: [{ icon: "🥝", label: "Kiwi fruit" }, { icon: "🐑", label: "Sheep" }, { icon: "🏔️", label: "Mountains" }, { icon: "🛶", label: "Canoe" }, { icon: "🌿", label: "Fern" }],
+  GB: [{ icon: "🌹", label: "Rose" }, { icon: "🚌", label: "Red bus" }, { icon: "☕", label: "Tea" }, { icon: "🏰", label: "Castle" }, { icon: "🎭", label: "Theatre" }],
+  US: [{ icon: "🦅", label: "Bald eagle" }, { icon: "🏞️", label: "National park" }, { icon: "🌽", label: "Corn" }, { icon: "🎸", label: "Music" }, { icon: "🏀", label: "Basketball" }],
+  IT: [{ icon: "🍋", label: "Lemon" }, { icon: "🍕", label: "Pizza" }, { icon: "🍝", label: "Pasta" }, { icon: "🏛️", label: "Historic architecture" }, { icon: "🍇", label: "Vineyards" }],
+  KR: [{ icon: "🌺", label: "Hibiscus" }, { icon: "🍲", label: "Stew" }, { icon: "🏯", label: "Palace" }, { icon: "🎤", label: "Music" }, { icon: "🍚", label: "Rice" }],
+  CH: [{ icon: "🏔️", label: "Alpine mountains" }, { icon: "🧀", label: "Cheese" }, { icon: "🚞", label: "Mountain railway" }, { icon: "🍫", label: "Chocolate" }, { icon: "⛷️", label: "Skiing" }],
+  BR: [{ icon: "🦜", label: "Parrot" }, { icon: "🥭", label: "Tropical fruit" }, { icon: "⚽", label: "Football" }, { icon: "🥁", label: "Music" }, { icon: "🌴", label: "Palm tree" }],
+  IN: [{ icon: "🪷", label: "Lotus" }, { icon: "🛕", label: "Temple" }, { icon: "🥘", label: "Cuisine" }, { icon: "🦚", label: "Peacock" }, { icon: "🫖", label: "Tea" }],
+  TH: [{ icon: "🐘", label: "Elephant" }, { icon: "🛕", label: "Temple" }, { icon: "🌺", label: "Tropical flower" }, { icon: "🍜", label: "Noodles" }, { icon: "🥭", label: "Mango" }],
+  MX: [{ icon: "🌵", label: "Cactus" }, { icon: "🌮", label: "Taco" }, { icon: "🪅", label: "Piñata" }, { icon: "🦋", label: "Monarch butterfly" }, { icon: "🌽", label: "Corn" }],
 };
 
-function locationMotif(country: string) {
-  return LOCAL_MOTIFS[country.toUpperCase()] ?? { icon: "🌿", label: "Leaf" };
+const CITY_MOTIFS: Record<string, MotifSet> = {
+  "US:new york": [{ icon: "🗽", label: "Statue of Liberty" }, { icon: "🚕", label: "Yellow taxi" }, { icon: "🥯", label: "New York bagel" }, { icon: "🎭", label: "Broadway" }, { icon: "🏙️", label: "New York skyline" }],
+  "JP:tokyo": [{ icon: "🗼", label: "Tokyo Tower" }, { icon: "🌸", label: "Sakura" }, { icon: "🍣", label: "Sushi" }, { icon: "🚅", label: "Bullet train" }, { icon: "🏮", label: "Lantern" }],
+  "JP:kyoto": [{ icon: "⛩️", label: "Torii gate" }, { icon: "🌸", label: "Sakura" }, { icon: "🍵", label: "Tea" }, { icon: "🎋", label: "Bamboo" }, { icon: "🏮", label: "Lantern" }],
+  "GB:london": [{ icon: "🚌", label: "London bus" }, { icon: "🎡", label: "London Eye" }, { icon: "☕", label: "Tea" }, { icon: "🎭", label: "West End theatre" }, { icon: "🌹", label: "Rose" }],
+};
+
+function locationMotif(city: string, country: string, dayIndex: number): LocationMotif {
+  const code = country.toUpperCase();
+  const motifs = CITY_MOTIFS[`${code}:${city.trim().toLowerCase()}`] ?? COUNTRY_MOTIFS[code];
+  if (motifs) return motifs[dayIndex % motifs.length];
+  const localMotifs: MotifSet = [
+    { icon: "📍", label: `${city || "Local"} location` },
+    { icon: "🏙️", label: `${city || "Local"} city` },
+    { icon: "🌳", label: `${city || "Local"} green spaces` },
+    { icon: "🍽️", label: `${city || "Local"} food` },
+    { icon: "🏞️", label: `${city || "Local"} landscape` },
+  ];
+  return localMotifs[dayIndex % localMotifs.length];
 }
 
 // ─── Food background ──────────────────────────────────────────────────────────
@@ -769,28 +790,31 @@ export default function WeatherDashboard() {
             <section className={styles.forecastSection} aria-label="5-day forecast">
               <h2 className={styles.forecastTitle}>5-Day Forecast · {current.city}</h2>
               <div className={styles.forecastStrip}>
-                {forecast.map((day) => (
-                  <div key={day.date} className={`${styles.forecastCard} ${current.country === "JP" ? styles.forecastSakura : ""}`}>
-                    <span className={styles.forecastDate}>{day.date}</span>
-                    <span
-                      className={styles.forecastMotif}
-                      role="img"
-                      aria-label={locationMotif(current.country).label}
-                      title={locationMotif(current.country).label}
-                    >
-                      {locationMotif(current.country).icon}
-                    </span>
-                    <span className={styles.forecastDescription}>{day.description}</span>
-                    <div className={styles.forecastTemps}>
-                      <span className={styles.forecastHigh}>{formatTempBoth(day.tempMax).c}</span>
-                      <span className={styles.forecastHighAlt}>{formatTempBoth(day.tempMax).f}</span>
+                {forecast.map((day, index) => {
+                  const motif = locationMotif(current.city, current.country, index);
+                  return (
+                    <div key={day.date} className={`${styles.forecastCard} ${current.country === "JP" ? styles.forecastSakura : ""}`}>
+                      <span className={styles.forecastDate}>{day.date}</span>
+                      <span
+                        className={styles.forecastMotif}
+                        role="img"
+                        aria-label={motif.label}
+                        title={motif.label}
+                      >
+                        {motif.icon}
+                      </span>
+                      <span className={styles.forecastDescription}>{day.description}</span>
+                      <div className={styles.forecastTemps}>
+                        <span className={styles.forecastHigh}>{formatTempBoth(day.tempMax).c}</span>
+                        <span className={styles.forecastHighAlt}>{formatTempBoth(day.tempMax).f}</span>
+                      </div>
+                      <div className={styles.forecastTemps}>
+                        <span className={styles.forecastLow}>{formatTempBoth(day.tempMin).c}</span>
+                        <span className={styles.forecastLowAlt}>{formatTempBoth(day.tempMin).f}</span>
+                      </div>
                     </div>
-                    <div className={styles.forecastTemps}>
-                      <span className={styles.forecastLow}>{formatTempBoth(day.tempMin).c}</span>
-                      <span className={styles.forecastLowAlt}>{formatTempBoth(day.tempMin).f}</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </section>
           )}

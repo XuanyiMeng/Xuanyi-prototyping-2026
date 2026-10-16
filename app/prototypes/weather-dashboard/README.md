@@ -68,9 +68,11 @@ events. Phones show fewer particles, and reduced-motion settings disable them.
 
 ## Local forecast motifs
 
-The five forecast tiles use soft organic outlines and a decorative motif selected
-from the weather location's country code (for example, sakura for Japan, maple
-leaves for Canada, and tulips for the Netherlands). Unmapped countries use a leaf.
+The five forecast tiles use soft organic outlines and five different decorative
+motifs selected from the weather location's city or country. New York, Tokyo,
+Kyoto, and London have city-specific sets; supported countries have their own
+sets (for example, sakura, a torii gate, and tea for Japan). Other places use
+five neutral local-place motifs instead of repeating one leaf.
 Weather descriptions remain visible below the motif, alongside both temperature
 units, so the local decoration does not replace forecast information.
 
