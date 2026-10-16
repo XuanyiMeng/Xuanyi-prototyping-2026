@@ -10,6 +10,8 @@ A real-time weather dashboard prototype that shows current conditions and a
 - 🌡️ Shows temperature (toggle °C / °F), feels-like, humidity, wind speed,
   sunrise and sunset times
 - 📅 Displays a 5-day forecast strip with daily high/low temperatures
+- 💬 Ends with a short English quip that changes with the current temperature
+  or rain/snow; before weather loads it shows a general uplifting line.
 - 🎨 Macaron background gradients follow temperature: icy lavender below 0°C,
   mist blue below 10°C, pale aqua below 18°C, mint below 24°C, cream and peach
   below 30°C, and peach pink from 30°C. Dark text and frosted white cards keep

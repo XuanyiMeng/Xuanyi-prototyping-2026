@@ -90,6 +90,20 @@ const conditionEmoji = (condition: string, isNight: boolean): string => {
   }
 };
 
+/** A small closing line that follows the weather without competing with it. */
+const weatherQuip = (weather: CurrentWeather | null): string => {
+  if (!weather) return "Everything is a win when the goal is to experience.";
+  const celsius = weather.temp - 273.15;
+  if (celsius >= 30) return "Calm down, bro!! The heat is doing the most.";
+  if (celsius < 0) return "Even my thoughts need a scarf today.";
+  if (weather.condition === "Thunderstorm") return "The sky has entered its dramatic era.";
+  if (weather.condition === "Snow") return "The sky is throwing a tiny pillow fight.";
+  if (weather.condition === "Rain" || weather.condition === "Drizzle") return "The clouds really said: free shower.";
+  if (celsius >= 24) return "Iced drinks are a personality trait today.";
+  if (celsius < 10) return "BRB, negotiating with my blanket.";
+  return "Everything is a win when the goal is to experience.";
+};
+
 // The weather API supplies the place name and country code. Keep five distinct
 // motifs for each supported location so the forecast cards don't repeat one icon.
 // These are decorative; the weather description remains readable below each one.
@@ -823,6 +837,7 @@ export default function WeatherDashboard() {
 
       <footer className={styles.footer}>
         <p>Powered by <a href="https://openweathermap.org" target="_blank" rel="noreferrer">OpenWeatherMap</a></p>
+        <p className={styles.footerQuip}>{weatherQuip(current)}</p>
       </footer>
     </div>
   );
