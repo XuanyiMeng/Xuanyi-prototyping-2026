@@ -11,6 +11,13 @@ interface PrototypeInfo {
 
 const prototypes: PrototypeInfo[] = [
   {
+    slug: "my-bookshelf",
+    title: "My bookshelf",
+    description: "A personal reading gallery powered by Notion. Browse book covers, authors, genres, ratings, and reviews, with search and filters for your collection.",
+    date: "2026-10-16",
+    tag: "Notion API · Reading Tracker",
+  },
+  {
     slug: "weather-dashboard",
     title: "Weather Near Me 🌤️",
     description: "Real-time weather dashboard for your current location using the OpenWeatherMap API. Shows current conditions, feels-like temp, humidity, wind speed, and a 5-day forecast with a dynamic sky theme.",
