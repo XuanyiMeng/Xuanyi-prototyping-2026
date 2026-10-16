@@ -256,6 +256,7 @@ export default function WeatherDashboard() {
   const [forecast, setForecast] = useState<ForecastDay[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [locationNote, setLocationNote] = useState<string | null>(null);
 
   // ── Load saved API key from sessionStorage on mount, fallback to env variable
   useEffect(() => {
@@ -290,7 +291,7 @@ export default function WeatherDashboard() {
 
   // ── Fetch weather by coordinates
   const fetchByCoords = useCallback(
-    async (lat: number, lon: number, key: string) => {
+    async (lat: number, lon: number, key: string, source: "precise" | "approximate" | null = null) => {
       if (requestBusy.current) return;
       requestBusy.current = true;
       setLoading(true);
@@ -331,6 +332,9 @@ export default function WeatherDashboard() {
           sunrise: curData.sys.sunrise,
           sunset: curData.sys.sunset,
         });
+        setLocationNote(source === "approximate"
+          ? "Approximate location from your network. It may differ from your actual location; search or use the map to adjust."
+          : null);
 
         // Parse 5-day forecast: group the 3-hour slots by calendar day
         const tzOffset: number = curData.timezone; // seconds
@@ -406,21 +410,47 @@ export default function WeatherDashboard() {
     setLocating(false);
   }, []);
 
-  const requestLocation = useCallback((key: string, silent = false) => {
-    if (!navigator.geolocation) {
-      if (!silent) setError("This browser cannot share its location. Search for a city or choose a place on the map.");
-      return;
-    }
+  const useApproximateLocation = useCallback(async (requestId: number, key: string, silent: boolean) => {
+    if (locationRequestId.current !== requestId) return;
+    // A late browser permission response must not replace the network result.
+    const fallbackId = ++locationRequestId.current;
+    if (locationTimer.current) clearTimeout(locationTimer.current);
+    locationTimer.current = null;
 
+    try {
+      const response = await fetch("/api/approx-location", {
+        cache: "no-store",
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!response.ok) throw new Error("Network location unavailable");
+      const point: { latitude: number; longitude: number } = await response.json();
+      if (!Number.isFinite(point.latitude) || !Number.isFinite(point.longitude)) {
+        throw new Error("Invalid network location");
+      }
+      if (locationRequestId.current !== fallbackId) return;
+      setLocating(false);
+      fetchByCoords(point.latitude, point.longitude, key, "approximate");
+    } catch {
+      if (locationRequestId.current !== fallbackId) return;
+      setLocating(false);
+      if (!silent) setError("Your device and network could not provide a location. Check browser and system location access, or choose a city on the map.");
+    }
+  }, [fetchByCoords]);
+
+  const requestLocation = useCallback((key: string, silent = false) => {
     if (locationTimer.current) clearTimeout(locationTimer.current);
     const requestId = ++locationRequestId.current;
     setLocating(true);
     setError(null);
 
+    if (!navigator.geolocation) {
+      void useApproximateLocation(requestId, key, silent);
+      return;
+    }
+
     locationTimer.current = setTimeout(() => {
       if (locationRequestId.current !== requestId) return;
-      stopLocating();
-      if (!silent) setError("Location is taking too long. Allow location access in your browser, or search for a city or use the map.");
+      void useApproximateLocation(requestId, key, silent);
     }, 12000);
 
     try {
@@ -428,24 +458,19 @@ export default function WeatherDashboard() {
         (position) => {
           if (locationRequestId.current !== requestId) return;
           stopLocating();
-          fetchByCoords(position.coords.latitude, position.coords.longitude, key);
+          fetchByCoords(position.coords.latitude, position.coords.longitude, key, "precise");
         },
-        (geoError) => {
+        () => {
           if (locationRequestId.current !== requestId) return;
-          stopLocating();
-          if (silent) return;
-          setError(geoError.code === 1
-            ? "Location access is blocked. Allow it in your browser’s address bar, or search for a city or use the map."
-            : "Could not find your location. Search for a city or choose a place on the map.");
+          void useApproximateLocation(requestId, key, silent);
         },
         { enableHighAccuracy: false, maximumAge: 300000, timeout: 10000 }
       );
     } catch {
       if (locationRequestId.current !== requestId) return;
-      stopLocating();
-      if (!silent) setError("Location is unavailable in this browser. Search for a city or use the map.");
+      void useApproximateLocation(requestId, key, silent);
     }
-  }, [fetchByCoords, stopLocating]);
+  }, [fetchByCoords, stopLocating, useApproximateLocation]);
 
   const handleGeolocate = useCallback(() => {
     if (!apiKey) {
@@ -692,6 +717,7 @@ export default function WeatherDashboard() {
                   <span className={styles.countryBadge}>{current.country}</span>
                 </h1>
                 <p className={styles.conditionDesc}>{current.description}</p>
+                {locationNote && <p className={styles.locationNote} role="status">📍 {locationNote}</p>}
               </div>
               <div className={styles.weatherIcon} aria-hidden="true">
                 {conditionEmoji(current.condition, isNight)}

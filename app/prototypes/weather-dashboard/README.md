@@ -87,6 +87,9 @@ neutral leaf motif. Leaflet loads in the browser and uses attributed OpenStreetM
 standard tiles; no extra map API key is required. Tiles need internet access and
 follow https://operations.osmfoundation.org/policies/tiles/ (no offline prefetch).
 
-If browser location permission is blocked or the browser does not respond within
-12 seconds, the page shows a clear message and restores the location button.
-You can always search by city or choose a place on the map instead.
+The location button first tries the browser's precise location. If browser
+permission is blocked or no location arrives within 12 seconds, the live Vercel
+site uses its city-level network location headers instead and clearly labels the
+result as approximate. Network location can be wrong when using a VPN. Local
+development has no Vercel location headers, so it displays a helpful error and
+lets you search by city or choose a place on the map instead.

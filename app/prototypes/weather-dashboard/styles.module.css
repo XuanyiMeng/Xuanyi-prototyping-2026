@@ -447,6 +447,14 @@
   text-transform: capitalize;
 }
 
+.locationNote {
+  margin-top: 0.65rem;
+  max-width: 34rem;
+  color: #52607a;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
 .weatherIcon {
   font-size: 5rem;
   line-height: 1;
