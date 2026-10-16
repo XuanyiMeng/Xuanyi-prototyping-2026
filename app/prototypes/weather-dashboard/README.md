@@ -86,3 +86,7 @@ Locations without a city/country (such as the ocean) display coordinates and the
 neutral leaf motif. Leaflet loads in the browser and uses attributed OpenStreetMap
 standard tiles; no extra map API key is required. Tiles need internet access and
 follow https://operations.osmfoundation.org/policies/tiles/ (no offline prefetch).
+
+If browser location permission is blocked or the browser does not respond within
+12 seconds, the page shows a clear message and restores the location button.
+You can always search by city or choose a place on the map instead.

@@ -248,6 +248,8 @@ export default function WeatherDashboard() {
   const [mapOpen, setMapOpen] = useState(false);
   const mapButton = useRef<HTMLButtonElement>(null);
   const requestBusy = useRef(false);
+  const locationRequestId = useRef(0);
+  const locationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Weather data
   const [current, setCurrent] = useState<CurrentWeather | null>(null);
@@ -395,30 +397,64 @@ export default function WeatherDashboard() {
     [fetchByCoords]
   );
 
-  // ── Use browser geolocation
+  // A browser permission prompt can stay unanswered indefinitely. Ignore late
+  // callbacks after our own timer expires or the user chooses another place.
+  const stopLocating = useCallback(() => {
+    locationRequestId.current += 1;
+    if (locationTimer.current) clearTimeout(locationTimer.current);
+    locationTimer.current = null;
+    setLocating(false);
+  }, []);
+
+  const requestLocation = useCallback((key: string, silent = false) => {
+    if (!navigator.geolocation) {
+      if (!silent) setError("This browser cannot share its location. Search for a city or choose a place on the map.");
+      return;
+    }
+
+    if (locationTimer.current) clearTimeout(locationTimer.current);
+    const requestId = ++locationRequestId.current;
+    setLocating(true);
+    setError(null);
+
+    locationTimer.current = setTimeout(() => {
+      if (locationRequestId.current !== requestId) return;
+      stopLocating();
+      if (!silent) setError("Location is taking too long. Allow location access in your browser, or search for a city or use the map.");
+    }, 12000);
+
+    try {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          if (locationRequestId.current !== requestId) return;
+          stopLocating();
+          fetchByCoords(position.coords.latitude, position.coords.longitude, key);
+        },
+        (geoError) => {
+          if (locationRequestId.current !== requestId) return;
+          stopLocating();
+          if (silent) return;
+          setError(geoError.code === 1
+            ? "Location access is blocked. Allow it in your browser’s address bar, or search for a city or use the map."
+            : "Could not find your location. Search for a city or choose a place on the map.");
+        },
+        { enableHighAccuracy: false, maximumAge: 300000, timeout: 10000 }
+      );
+    } catch {
+      if (locationRequestId.current !== requestId) return;
+      stopLocating();
+      if (!silent) setError("Location is unavailable in this browser. Search for a city or use the map.");
+    }
+  }, [fetchByCoords, stopLocating]);
+
   const handleGeolocate = useCallback(() => {
     if (!apiKey) {
       setShowKeyPanel(true);
       setError("Please enter your OpenWeatherMap API key first.");
       return;
     }
-    if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser.");
-      return;
-    }
-    setLocating(true);
-    setError(null);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocating(false);
-        fetchByCoords(pos.coords.latitude, pos.coords.longitude, apiKey);
-      },
-      () => {
-        setLocating(false);
-        setError("Location access denied. Try searching for a city instead.");
-      }
-    );
-  }, [apiKey, fetchByCoords]);
+    requestLocation(apiKey);
+  }, [apiKey, requestLocation]);
 
   // ── Search by city name
   const handleCitySearch = (e: React.FormEvent) => {
@@ -429,6 +465,7 @@ export default function WeatherDashboard() {
       return;
     }
     if (!cityInput.trim()) return;
+    stopLocating();
     fetchByCity(cityInput.trim(), apiKey);
   };
 
@@ -443,23 +480,7 @@ export default function WeatherDashboard() {
     setShowKeyPanel(false);
     setError(null);
     // Auto-trigger geolocation after key is saved
-    handleGeolocateAfterKey(trimmed);
-  };
-
-  // Helper: geolocate immediately after saving key (avoids stale closure)
-  const handleGeolocateAfterKey = (key: string) => {
-    if (!navigator.geolocation) return;
-    setLocating(true);
-    setError(null);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocating(false);
-        fetchByCoords(pos.coords.latitude, pos.coords.longitude, key);
-      },
-      () => {
-        setLocating(false);
-      }
-    );
+    requestLocation(trimmed, true);
   };
 
   // ── Determine day/night
@@ -521,6 +542,7 @@ export default function WeatherDashboard() {
               className={styles.keyRemove}
               onClick={() => {
                 sessionStorage.removeItem("owm_api_key");
+                stopLocating();
                 setApiKey("");
                 setCurrent(null);
                 setMapPoint(null);
@@ -601,16 +623,17 @@ export default function WeatherDashboard() {
             >×</button>
             <WeatherMap
               point={mapPoint}
-              busy={loading || locating}
+              busy={loading}
               summary={current ? `${current.city} · ${formatTempBoth(current.temp).c} / ${formatTempBoth(current.temp).f} · ${current.description}` : ""}
               onSelect={(lat, lon) => {
-                if (loading || locating || requestBusy.current) return;
+                if (loading || requestBusy.current) return;
                 if (!apiKey) {
                   setMapOpen(false);
                   setShowKeyPanel(true);
                   setError("Please enter your OpenWeatherMap API key first.");
                   return;
                 }
+                stopLocating();
                 fetchByCoords(lat, lon, apiKey);
               }}
             />
