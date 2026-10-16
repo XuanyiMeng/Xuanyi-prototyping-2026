@@ -76,7 +76,9 @@ units, so the local decoration does not replace forecast information.
 
 ## Interactive weather map
 
-Click or tap any location to query its current weather and forecast. The marker
+Open the compact map card to explore the full map, then click or tap any
+location to query its current weather and forecast. Close the map with the ×
+button or Escape. The marker
 and summary update after a successful request; city search and geolocation also
 recenter the map. For keyboard use, focus the map, pan with arrow keys and zoom
 with +/−, then use Check map center. Queries are paused while weather is loading.

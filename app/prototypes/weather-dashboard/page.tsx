@@ -245,6 +245,8 @@ export default function WeatherDashboard() {
   const [locating, setLocating] = useState(false);
 
   const [mapPoint, setMapPoint] = useState<{ lat: number; lon: number } | null>(null);
+  const [mapOpen, setMapOpen] = useState(false);
+  const mapButton = useRef<HTMLButtonElement>(null);
   const requestBusy = useRef(false);
 
   // Weather data
@@ -267,6 +269,18 @@ export default function WeatherDashboard() {
       setShowKeyPanel(true); // Show panel if no key found anywhere
     }
   }, []);
+
+  useEffect(() => {
+    if (!mapOpen) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMapOpen(false);
+        mapButton.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [mapOpen]);
 
   // ── Format temperature showing both °C and °F at the same time
   const formatTempBoth = (kelvin: number) =>
@@ -551,20 +565,58 @@ export default function WeatherDashboard() {
 
       </div>
 
-      <WeatherMap
-        point={mapPoint}
-        busy={loading || locating}
-        summary={current ? `${current.city} · ${formatTempBoth(current.temp).c} / ${formatTempBoth(current.temp).f} · ${current.description}` : ""}
-        onSelect={(lat, lon) => {
-          if (loading || locating || requestBusy.current) return;
-          if (!apiKey) {
-            setShowKeyPanel(true);
-            setError("Please enter your OpenWeatherMap API key first.");
-            return;
-          }
-          fetchByCoords(lat, lon, apiKey);
-        }}
-      />
+      <button
+        ref={mapButton}
+        className={styles.mapLauncher}
+        type="button"
+        onClick={() => setMapOpen(true)}
+        aria-haspopup="dialog"
+      >
+        <span className={styles.mapLauncherIcon} aria-hidden="true">🗺️</span>
+        <span className={styles.mapLauncherText}>
+          <strong>Explore the weather map</strong>
+          <span>Tap to choose anywhere in the world</span>
+        </span>
+        <span className={styles.mapLauncherArrow} aria-hidden="true">↗</span>
+      </button>
+
+      {mapOpen && (
+        <div
+          className={styles.mapOverlay}
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setMapOpen(false);
+          }}
+        >
+          <div className={styles.mapDialog} role="dialog" aria-modal="true" aria-labelledby="weather-map-title">
+            <button
+              className={styles.mapClose}
+              type="button"
+              aria-label="Close weather map"
+              autoFocus
+              onClick={() => {
+                setMapOpen(false);
+                mapButton.current?.focus();
+              }}
+            >×</button>
+            <WeatherMap
+              point={mapPoint}
+              busy={loading || locating}
+              summary={current ? `${current.city} · ${formatTempBoth(current.temp).c} / ${formatTempBoth(current.temp).f} · ${current.description}` : ""}
+              onSelect={(lat, lon) => {
+                if (loading || locating || requestBusy.current) return;
+                if (!apiKey) {
+                  setMapOpen(false);
+                  setShowKeyPanel(true);
+                  setError("Please enter your OpenWeatherMap API key first.");
+                  return;
+                }
+                fetchByCoords(lat, lon, apiKey);
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* ── Error Banner ── */}
       {error && (
